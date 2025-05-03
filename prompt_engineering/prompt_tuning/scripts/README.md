@@ -1,1 +1,0 @@
-This file contains scripts used for prompting experiments

@@ -1,1 +1,0 @@
-This folder contains scripts and results of knowledge distillation experiments

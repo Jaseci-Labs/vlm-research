@@ -1,0 +1,15 @@
+experiments:
+  - name: prompt_eval
+    description: "Prompt quality comparison with different styles and shots"
+    module: prompt_eval
+    active: true
+
+  - name: peft_vs_full
+    description: "Compare LoRA, QLoRA, and full fine-tuning"
+    module: training_comparison
+    active: true
+
+  - name: image_impact
+    description: "Vary training image count to study performance scaling"
+    module: data_impact
+    active: true

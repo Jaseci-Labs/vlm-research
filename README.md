@@ -19,26 +19,37 @@ A modular, future-proof experiment framework for research and development on **V
 
 ```
 vlm-research/
-├── main.py                    # Entry point for training/sweeps
-├── train.py                   # Training logic (Hydra-driven)
-├── evaluate.py                # Prompt evaluation logic
-├── runner.py                  # Experiment dispatcher
-├── experiment_registry.yaml   # Maps experiment types to logic
+├── main.py                            # Lightweight experiment dispatcher
+├── experiment_registry.yaml           # Maps experiment name -> experiments/<name>/run.py
 │
-├── configs/                   # Modular Hydra config directory
-│   ├── config.yaml            # Base config
-│   ├── experiment/            # Experiment definitions
-│   ├── sweep/                 # Sweep configs (e.g. lr, batch size)
-│   ├── model/                 # Model-specific configs
-│   ├── training/              # Training parameters
-│   ├── dataset/               # Dataset-specific configs
+├── experiments/                       # Each experiment is isolated and self-contained
+│   ├── peft_vs_full/
+│   │   ├── run.py                     # Entry point for this experiment
+│   │   ├── logic.py                   # Core training/eval logic
+│   │   ├── config.yaml                # Local override config (Hydra)
+│   │   ├── outputs/
+│   │   └── logs/                      # Hydra logs and model artifacts
+│   │
+│   └──  prompt_eval/
+│       ├── run.py
+│       ├── evaluator.py
+│       ├── config.yaml
+│       ├── outputs/
+│       └── logs/                      # Hydra logs and model artifacts
 │
-├── utils/                     # Helper functions
-│   ├── wandb_utils.py         # W&B init, naming, grouping
-│   └── loaders.py             # Model & dataset loaders
+├── configs/                           # Global Hydra configs (model, dataset, sweep)
+│   ├── config.yaml
+│   ├── model/
+│   ├── training/
+│   ├── dataset/
+│   └── sweep/
 │
-├── outputs/                   # Hydra run outputs
-├── logs/                      # Optional log outputs
+├── core/                              # Shared utilities
+│   ├── wandb_utils.py
+│   ├── loaders.py
+│   ├── metrics.py
+│   └── registry.py                    # Load experiment modules dynamically
+│
 ├── README.md
 └── requirements.txt
 ```

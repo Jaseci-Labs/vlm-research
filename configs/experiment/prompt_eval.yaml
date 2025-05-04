@@ -1,5 +1,0 @@
-experiment:
-  type: prompt_eval
-  prompt_template: "damage_analysis_fewshot"
-  shots: [0, 1, 5]
-  prompts_path: ./data/prompts/damage_templates.json

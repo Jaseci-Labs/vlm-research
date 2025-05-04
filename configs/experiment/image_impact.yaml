@@ -1,4 +1,0 @@
-experiment:
-  type: data_impact
-  image_counts: [100, 500, 1000, 5000]
-  baseline: "peft"

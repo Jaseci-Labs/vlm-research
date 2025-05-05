@@ -108,7 +108,7 @@ W&B project and experiment name are customizable via config.
 3. Add handling logic to `runner.py`
 
 ---
-
+<!--
 ## 🧠 Ideal Use Cases
 
 - VLM-based insurance prediction
@@ -125,7 +125,7 @@ W&B project and experiment name are customizable via config.
 - [ ] Built-in evaluation metrics for VQA, OCR, etc.
 - [ ] Frontend integration with Jac Vision UI
 - [ ] On-the-fly model training via backend API
-
+-->
 ---
 
 ## 🤝 Contributing

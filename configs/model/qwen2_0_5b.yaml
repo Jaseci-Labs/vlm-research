@@ -1,0 +1,5 @@
+model:
+  name: qwen2_0_5b
+  pretrained_path: Qwen/Qwen2-0.5B
+  vision_model_path: openai/clip-vit-base-patch32
+  size: 0.5B

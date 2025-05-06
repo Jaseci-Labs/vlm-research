@@ -1,0 +1,16 @@
+defaults:
+  - _self_
+  - training
+  - model: qwen2_0_5b
+  - dataset: coco_tiny
+wandb:
+  project: vlm_finetune_experiments
+  team: JAC-VISION
+
+
+
+experiment: null
+
+hydra:
+  job:
+    chdir: False

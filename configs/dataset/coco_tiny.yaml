@@ -1,0 +1,4 @@
+dataset:
+  name: coco_tiny
+  size: 100
+  type: image_text

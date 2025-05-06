@@ -13,3 +13,8 @@ experiments:
     description: "Vary training image count to study performance scaling"
     module: data_impact
     active: true
+
+  - name: finetune_vlm
+    description: "Fine-tune Qwen2-0.5B with CLIP-ViT for VLM tasks using LoRA"
+    module: experiments.finetune_vlm.run
+    active: true

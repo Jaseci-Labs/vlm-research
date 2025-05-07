@@ -3,7 +3,7 @@
 A modular, future-proof experiment framework for research and development on **Visual Language Models (VLMs)**. Built with **Hydra**, **Weights & Biases**, and extensible YAML-based configurations — ideal for conducting prompting experiments, fine-tuning comparisons, training image impact studies, and more.
 
 ---
-
+<!--
 ## Features
 
 - Modular config-based experiment control (via [Hydra](https://hydra.cc))
@@ -12,7 +12,7 @@ A modular, future-proof experiment framework for research and development on **V
 - Clean architecture for easily extending models, datasets, and tasks
 - Hydra sweep support for systematic hyperparameter tuning
 - Ready for scaling to large experiments
-
+-->
 ---
 
 ## Project Structure
@@ -68,13 +68,13 @@ pip install -r requirements.txt
 
 ## Running Experiments
 
-### ➤ Run a single experiment
+### Run a single experiment
 
 ```bash
 python main.py experiment=peft_vs_full model=qwen7b dataset=car_damage
 ```
 
-### ➤ Run a hyperparameter sweep (Hydra multirun)
+### Run a hyperparameter sweep (Hydra multirun)
 
 ```bash
 python main.py -m sweep.lr=1e-5,5e-5,1e-4 sweep.batch_size=4,8,16

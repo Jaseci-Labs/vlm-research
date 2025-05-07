@@ -1,0 +1,7 @@
+sweep:
+  lr:
+    - 1e-5
+    - 5e-5
+  batch_size:
+    - 1
+    - 2

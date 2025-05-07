@@ -1,0 +1,12 @@
+defaults:
+  - _self_
+  - /model: qwen2_0_5b
+  - /dataset: coco_tiny
+  - /training
+
+wandb:
+  project: vlm_finetune_experiments
+  group: finetune_vlm
+  team: JAC-VISION
+
+output_dir: experiments/finetune_vlm/qwen2_0_5b_lora

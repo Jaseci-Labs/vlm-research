@@ -1,4 +1,4 @@
-# Jac Vision VLM Experiment Framework
+# VLM Research Experiment Framework
 
 A modular, future-proof experiment framework for research and development on **Visual Language Models (VLMs)**. Built with **Hydra**, **Weights & Biases**, and extensible YAML-based configurations — ideal for conducting prompting experiments, fine-tuning comparisons, training image impact studies, and more.
 

@@ -1,21 +1,21 @@
-# 🔬 Jac Vision VLM Experiment Framework
+# Jac Vision VLM Experiment Framework
 
 A modular, future-proof experiment framework for research and development on **Visual Language Models (VLMs)**. Built with **Hydra**, **Weights & Biases**, and extensible YAML-based configurations — ideal for conducting prompting experiments, fine-tuning comparisons, training image impact studies, and more.
 
 ---
 
-## 🚀 Features
+## Features
 
-- ✅ Modular config-based experiment control (via [Hydra](https://hydra.cc))
-- ✅ W&B integration for grouped runs, logging, and comparisons
-- ✅ Supports **PEFT vs full fine-tuning**, image ablation, and prompting studies
-- ✅ Clean architecture for easily extending models, datasets, and tasks
-- ✅ Hydra sweep support for systematic hyperparameter tuning
-- ✅ Ready for scaling to large experiments
+- Modular config-based experiment control (via [Hydra](https://hydra.cc))
+- W&B integration for grouped runs, logging, and comparisons
+- Supports **PEFT vs full fine-tuning**, image ablation, and prompting studies
+- Clean architecture for easily extending models, datasets, and tasks
+- Hydra sweep support for systematic hyperparameter tuning
+- Ready for scaling to large experiments
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 vlm-research/
@@ -56,7 +56,7 @@ vlm-research/
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 ```bash
 git clone https://github.com/yourusername/vlm-research.git
@@ -66,7 +66,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🧪 Running Experiments
+## Running Experiments
 
 ### ➤ Run a single experiment
 
@@ -88,7 +88,7 @@ python main.py -m +sweep=lr_vs_batch
 
 ---
 
-## 📊 W&B Logging
+## W&B Logging
 
 Each run will automatically log:
 
@@ -101,7 +101,7 @@ W&B project and experiment name are customizable via config.
 
 ---
 
-## 🧩 Adding New Experiments
+## Adding New Experiments
 
 1. Add new YAML to `configs/experiment/`
 2. Update `experiment_registry.yaml`
@@ -109,7 +109,7 @@ W&B project and experiment name are customizable via config.
 
 ---
 <!--
-## 🧠 Ideal Use Cases
+## Ideal Use Cases
 
 - VLM-based insurance prediction
 - Prompt vs. finetuning comparison studies
@@ -118,17 +118,17 @@ W&B project and experiment name are customizable via config.
 
 ---
 
-## 📌 TODO / Coming Soon
+## TODO / Coming Soon
 
 - [ ] Hugging Face model auto-loading
 - [ ] Fine-tuning via Unsloth or LoRA
 - [ ] Built-in evaluation metrics for VQA, OCR, etc.
 - [ ] Frontend integration with Jac Vision UI
 - [ ] On-the-fly model training via backend API
--->
+
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We're building this as a flexible backend for the **Jac Vision** no-code platform and for visual AI experimentation. If you're a researcher, engineer, or builder — PRs and suggestions are welcome.
 
@@ -137,3 +137,4 @@ We're building this as a flexible backend for the **Jac Vision** no-code platfor
 ## 📄 License
 
 MIT — free to use, extend, and share.
+-->

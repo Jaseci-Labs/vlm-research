@@ -1,0 +1,39 @@
+# Hyperparameter sweep configuration for radiology PEFT experiment
+program: main.py
+method: bayes  # Options: grid, random, bayes
+metric:
+  name: eval/loss
+  goal: minimize
+
+parameters:
+  experiment.name:
+    value: radiology_peft
+  
+  training.learning_rate:
+    distribution: log_uniform_values
+    min: 1e-6
+    max: 5e-5
+  
+  training.num_train_epochs:
+    values: [1, 2, 3]
+  
+  model.peft.r:
+    values: [4, 8, 16, 32]
+  
+  model.peft.lora_alpha:
+    values: [8, 16, 32]
+  
+  training.warmup_ratio:
+    values: [0.05, 0.1, 0.2]
+  
+  training.weight_decay:
+    values: [0.0, 0.01, 0.1]
+
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - experiment=radiology_peft
+  - hydra.mode=MULTIRUN
+  - hydra.sweep.dir=./experiments/radiology_peft/sweep/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  - ${args_no_hyphens}

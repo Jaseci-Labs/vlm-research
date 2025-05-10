@@ -1,0 +1,28 @@
+# Default training configuration
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 2
+num_train_epochs: 1
+learning_rate: 1.0e-5
+warmup_ratio: 0.1
+weight_decay: 0.01
+lr_scheduler_type: "linear"
+optim: "adamw_8bit"
+
+# Evaluation settings
+evaluation:
+  enabled: true
+  strategy: "steps"
+  steps: 20  # Evaluate every N steps
+  per_device_eval_batch_size: 4
+  num_eval_samples: 200
+
+# Logging settings
+logging:
+  strategy: "steps"
+  steps: 10  # Log every N steps
+  save_model_checkpoint: true
+  save_steps: 50
+
+# Mixed precision training
+fp16: false  # Will be automatically determined based on hardware
+bf16: false  # Will be automatically determined based on hardware

@@ -1,0 +1,16 @@
+# Radiology dataset configuration
+name: "unsloth/Radiology_mini"
+train_split: "train"
+eval_split: "test"
+train_size: 1600
+eval_size: 200
+test_size: 50
+start_train_idx: 0
+start_eval_idx: 1700
+batch_size: 4
+
+# Prompt configuration
+instruction: "You are an expert radiographer. Describe accurately what you see in this image."
+
+# Processing configuration
+num_proc: 4

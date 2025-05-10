@@ -1,0 +1,25 @@
+# Model configuration for Qwen2-VL-2B-Instruct
+name: "unsloth/Qwen2-VL-2B-Instruct"
+load_in_4bit: true
+use_gradient_checkpointing: "unsloth"
+max_seq_length: 2048
+
+# PEFT configuration
+peft:
+  enabled: true
+  finetune_vision_layers: true
+  finetune_language_layers: true
+  finetune_attention_modules: true
+  finetune_mlp_modules: true
+  r: 16
+  lora_alpha: 16
+  lora_dropout: 0
+  bias: "none"
+  use_rslora: false
+  
+# Generation configuration
+generation:
+  max_new_tokens: 128
+  temperature: 1.5
+  min_p: 0.1
+  use_cache: false

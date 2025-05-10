@@ -1,0 +1,23 @@
+# Local experiment config - values here override global defaults
+
+experiment:
+  name: radiology_peft
+  description: "Fine-tuning Qwen2-VL model for radiology image captioning"
+
+# Dataset overrides
+dataset:
+  name: "unsloth/Radiology_mini"
+  train_size: 1600
+  eval_size: 200
+  test_size: 50
+
+# Training overrides
+training:
+  num_train_epochs: 1
+  evaluation:
+    steps: 50  # Evaluate less frequently to speed up training
+
+# Model overrides
+model:
+  peft:
+    r: 16  # Experiment with different LoRA ranks

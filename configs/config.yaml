@@ -1,0 +1,77 @@
+defaults:
+  - _self_
+  - model: qwen2_vl_2b
+  - training: default
+  - dataset: radiology_mini
+  - sweep: null
+  - override hydra/job_logging: colorlog
+  - override hydra/hydra_logging: colorlog
+
+# Override at command line with +experiment=radiology_peft
+experiment:
+  name: radiology_peft
+
+# General settings
+seed: 3407
+output_dir: ${hydra:runtime.output_dir}
+
+# Weights & Biases configuration
+wandb:
+  project: vlm-research
+  entity: ${oc.env:WANDB_ENTITY,null}
+  mode: online  # Set to "disabled" to turn off wandb
+  tags: []
+
+# Hydra configuration
+hydra:
+  run:
+    dir: ./experiments/${experiment.name}/logs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: ./experiments/${experiment.name}/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: True
+  job_logging:
+    colorlog:
+      level: INFO
+      format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+      datefmt: "%Y-%m-%d %H:%M:%S"
+
+
+# Main configuration file
+
+# # Fix 2: Update hydra configuration to use an available job_logging option
+# defaults:
+#   - _self_
+#   - experiment: default
+#   - hydra:
+#       job_logging: stdout  # Changed from 'colorlog' to 'stdout'
+#       # Other hydra configs
+#       run:
+#         dir: outputs/${experiment}/${now:%Y-%m-%d_%H-%M-%S}
+#       sweep:
+#         dir: multirun/${experiment}/${now:%Y-%m-%d_%H-%M-%S}
+
+# # Rest of your configuration
+# model:
+#   name: "llama-2-7b"
+#   # Other model parameters
+
+# data:
+#   dataset: "your_dataset"
+#   # Other data parameters
+
+# training:
+#   batch_size: 8
+#   learning_rate: 2e-5
+#   # Other training parameters
+
+# # Add wandb configuration if you're using it
+# wandb:
+#   enabled: true
+#   project: "vlm-research"
+
+# # Add unsloth configuration
+# unsloth:
+#   enabled: true
+#   precision: "fp16"
+#   max_seq_length: 512

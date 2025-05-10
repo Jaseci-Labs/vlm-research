@@ -1,0 +1,7 @@
+# hydra/job_logging/default.yaml
+# #   - _self_
+# #   - experiment: default
+# #   - dataset: radiology_mini
+# #   - training: default
+# #   - sweep: null
+# #   - override hydra/job_logging: colorlog

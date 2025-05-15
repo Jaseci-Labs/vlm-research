@@ -12,3 +12,4 @@ jupyter
 ipywidgets
 nltk
 openpyxl
+wandb

@@ -1,0 +1,15 @@
+transformers
+unsloth
+accelerate
+pillow
+numpy
+pandas
+sentence-transformers
+scikit-learn
+ipykernel
+kaggle
+jupyter
+ipywidgets
+nltk
+openpyxl
+wandb

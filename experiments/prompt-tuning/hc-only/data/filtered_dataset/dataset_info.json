@@ -1,0 +1,104 @@
+{
+  "builder_name": "parquet",
+  "citation": "",
+  "config_name": "TEST",
+  "dataset_name": "flickr30k",
+  "dataset_size": 4326502343,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0000.parquet": {
+      "num_bytes": 505667437,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0001.parquet": {
+      "num_bytes": 501896374,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0002.parquet": {
+      "num_bytes": 505834156,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0003.parquet": {
+      "num_bytes": 511840780,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0004.parquet": {
+      "num_bytes": 503648349,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0005.parquet": {
+      "num_bytes": 495305542,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0006.parquet": {
+      "num_bytes": 495475995,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0007.parquet": {
+      "num_bytes": 496924754,
+      "checksum": null
+    },
+    "hf://datasets/nlphuji/flickr30k@cd91f9a00273ce2e1584511cba8c10b917c488a3/TEST/test/0008.parquet": {
+      "num_bytes": 289359289,
+      "checksum": null
+    }
+  },
+  "download_size": 4305952676,
+  "features": {
+    "image": {
+      "_type": "Image"
+    },
+    "caption": [
+      {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    ],
+    "sentids": [
+      {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    ],
+    "split": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "img_id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "filename": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 8632455019,
+  "splits": {
+    "test": {
+      "name": "test",
+      "num_bytes": 4326502343,
+      "num_examples": 31014,
+      "shard_lengths": [
+        3800,
+        3700,
+        3700,
+        3800,
+        3600,
+        3400,
+        3300,
+        3600,
+        2114
+      ],
+      "dataset_name": "flickr30k"
+    }
+  },
+  "version": {
+    "version_str": "1.1.0",
+    "major": 1,
+    "minor": 1,
+    "patch": 0
+  }
+}

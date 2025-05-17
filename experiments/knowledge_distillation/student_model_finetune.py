@@ -2,18 +2,32 @@ from unsloth import FastVisionModel
 from unsloth.trainer import UnslothVisionDataCollator
 from unsloth import is_bf16_supported
 from trl import SFTTrainer, SFTConfig
+import torch
 
-from PIL import Image
+from sklearn.model_selection import train_test_split
+from PIL import Image, ImageFile
 import json
 import os
 
-MODEL_NAME = "unsloth/Qwen2.5-VL-7B-Instruct-bnb-4bit"
+from huggingface_hub import login
+import wandb
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+wandb.init(
+    project="Gemma 3 4B Test Unsloth",
+    name="Gemma test Unsloth",
+    group="gemma tests",
+    tags=["gemma","vision", "finetune"],
+    notes="Testing gemma 3 4B Unsloth",
+    config={
+        "model": "Gemma 3 4B",
+    },
+)
+
+MODEL_NAME = "unsloth/gemma-3-4b-it"
 JSON_FILE_PATH = "res.json"
-IMAGES_PATH = "car_damage_dataset"
-instruction = """
-              Please provide response based on the provided output format. 
-              Expected output format:\n```json\n{\n  \"predictions\": [\n    {\n      \"location\": \"front bumper\",\n      \"damage_type\": \"dent\",\n      \"severity\": \"major\"\n    },\n    {\n      \"location\": \"driver side door\",\n      \"damage_type\": \"scratch\",\n      \"severity\": \"minor\"\n    }\n  ],\n \"report\":\"Insurance Report: The vehicle sustained significant damage, including a major dent on the front bumper and a minor scratch on the driver side door. Estimated repair cost: $1,500.\"}\n```
-              """
+IMAGES_PATH = "image_dataset"
+instruction = "Descibe the damages of the car.",
 
 
 def convert_to_conversation(sample):
@@ -80,19 +94,20 @@ def configure_model(MODEL_NAME):
         loftq_config = None, # And LoftQ
         # target_modules = "all-linear", # Optional now! Can specify a list if needed
     )
-
     return model, tokenizer
 
 
-def configuration_for_training(model, tokenizer):
+def configuration_for_training(model, tokenizer, train_data, val_data):
     FastVisionModel.for_training(model)
 
     trainer = SFTTrainer(
         model = model,
         tokenizer = tokenizer,
         data_collator = UnslothVisionDataCollator(model, tokenizer),
-        train_dataset = converted_dataset,
+        train_dataset = train_data,
+        eval_dataset = val_data,
         args = SFTConfig(
+
             per_device_train_batch_size = 2,
             gradient_accumulation_steps = 4,
             warmup_steps = 5,
@@ -107,7 +122,7 @@ def configuration_for_training(model, tokenizer):
             lr_scheduler_type = "linear",
             seed = 3407,
             output_dir = "outputs",
-            report_to = "tensorboard",
+            report_to = "wandb",
 
             # You MUST put the below items for vision finetuning:
             remove_unused_columns = False,
@@ -124,10 +139,32 @@ def save_finetuned_model(model, tokenizer, model_name):
     tokenizer.save_pretrained(model_name)
 
 
+def upload_to_huggingface_hub(model, processor):
+    model.push_to_hub("Warun/Jaseci-Gemma-3-4B-Unsloth")
+    processor.push_to_hub("Warun/Jaseci-Gemma-3-4B-Unsloth")
+
+
 # Main execution
 if __name__ == "__main__":
-    converted_dataset = get_custom_dataset(JSON_FILE_PATH)
+    login(token="hf_XXXXXXXXXXXXXXXX")
+    full_dataset = get_custom_dataset(JSON_FILE_PATH)
+    train_data, test_val_data = train_test_split(full_dataset, test_size=0.2, random_state=42)
+    val_data, test_data = train_test_split(test_val_data, test_size=0.5, random_state=42)
+
     model, tokenizer = configure_model(MODEL_NAME)
-    trainer = configuration_for_training(model, tokenizer)
+    trainer = configuration_for_training(model, tokenizer, train_data, val_data)
+
+    # start memory
+    print("Starting training...")
+    gpu_stats = torch.cuda.get_device_properties(0)
+    start_gpu_memory = round(torch.cuda.max_memory_reserved() / 1024 / 1024 / 1024, 3)
+    max_memory = round(gpu_stats.total_memory / 1024 / 1024 / 1024, 3)
+
     trainer.train()
+
+    used_memory = round(torch.cuda.max_memory_reserved() / 1024 / 1024 / 1024, 3)
+    print(f"Peak reserved memory = {used_memory} GB.")
+
     save_finetuned_model(model, tokenizer, "finetuned_model")
+    trainer.push_to_hub()
+    upload_to_huggingface_hub(model, tokenizer)

@@ -1,4 +1,6 @@
 unsloth
+accelerator
+wandb
 torch
 Pillow
-tensorboard
+huggingface_hub

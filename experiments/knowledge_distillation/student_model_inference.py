@@ -1,9 +1,10 @@
 from PIL import Image
 from unsloth import FastVisionModel
 from transformers import TextStreamer
+from huggingface_hub import login
 
 def load_model():
-    task_path = "outputs/checkpoint-30" # put the output model path here
+    task_path = "Warun/Jaseci-Gemma-3-4B-Unsloth" # put the output model path here
 
     model, tokenizer = FastVisionModel.from_pretrained(
         model_name=task_path,
@@ -42,13 +43,12 @@ def process_vqa(model, tokenizer, image, question):
 
 
 if __name__ == "__main__":
-    image_path = "path_to_image.jpg"
+    login(token="hf_XXXXXXXXXXXXXXXX")
+
+    image_path = "path_of_your_image.jpg"  # replace with your image path
     image = Image.open(image_path).convert("RGB")
     
-    question = """
-            Please provide response based on the provided output format. 
-            Expected output format:\n```json\n{\n  \"predictions\": [\n    {\n      \"location\": \"front bumper\",\n      \"damage_type\": \"dent\",\n      \"severity\": \"major\"\n    },\n    {\n      \"location\": \"driver side door\",\n      \"damage_type\": \"scratch\",\n      \"severity\": \"minor\"\n    }\n  ],\n \"report\":\"Insurance Report: The vehicle sustained significant damage, including a major dent on the front bumper and a minor scratch on the driver side door. Estimated repair cost: $1,500.\"}\n```
-            """
+    question = "Descibe the damages of the car."
     
     model, tokenizer = load_model()    
     result = process_vqa(model, tokenizer, image, question)

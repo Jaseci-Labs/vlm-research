@@ -2,6 +2,8 @@ from PIL import Image
 from unsloth import FastVisionModel
 from transformers import TextStreamer
 from huggingface_hub import login
+import wandb
+import os
 
 def load_model():
     task_path = "Warun/Jaseci-Gemma-3-4B-Unsloth" # put the output model path here
@@ -43,13 +45,37 @@ def process_vqa(model, tokenizer, image, question):
 
 
 if __name__ == "__main__":
+    # Login to Hugging Face Hub and wandb
     login(token="hf_XXXXXXXXXXXXXXXX")
+    wandb.init(project="vlm-inference", name="batch-vqa-run")
+    
+    model, tokenizer = load_model()
+    
+    responses = []
+    question = "Describe the damages of the car."
 
-    image_path = "path_of_your_image.jpg"  # replace with your image path
-    image = Image.open(image_path).convert("RGB")
+    with open("test_images/test_images_paths.txt", "r") as f:
+        image_names = [line.strip() for line in f if line.strip()]
     
-    question = "Descibe the damages of the car."
+    for img_name in image_names:
+        img_path = os.path.join("test_images", img_name)
+        if not os.path.exists(img_path):
+            print(f"[Warning] Skipping missing image: {img_path}")
+            continue
+
+        image = Image.open(img_path).convert("RGB")
+        prediction = process_vqa(model, tokenizer, image, question)
+
+        responses.append({
+            "image": image,
+            "text": question,
+            "prediction": prediction
+        })
+        print(f"[Done] {img_name} -> {prediction}")
+
+    # Log the image and prediction to wandb
+    table = wandb.Table(columns=["image", "text", "prediction"])
+    for response in responses:
+        table.add_data(wandb.Image(response["image"]), response["text"], response["prediction"])
     
-    model, tokenizer = load_model()    
-    result = process_vqa(model, tokenizer, image, question)
-    print(result)
+    wandb.log({"VQA Predictions": table})

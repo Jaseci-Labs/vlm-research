@@ -1,0 +1,12 @@
+torch
+transformers
+unsloth
+datasets
+peft
+trl
+bitsandbytes
+sentence-transformers
+pandas
+openpyxl
+pillow
+numpy

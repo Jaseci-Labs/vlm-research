@@ -178,6 +178,8 @@ if __name__ == "__main__":
 
     print("Loading dataset...")
     train_data, val_data, test_data = dataset_split(JSON_FILE_PATH, test_size=0.2, random_state=42)
+    with open("test_data.json", "w") as f:
+        json.dump(test_data, f, indent=2)
     print(f"Train data size: {len(train_data)}, Validation data size: {len(val_data)}, Test data size: {len(test_data)}")
 
     # Splitting the dataset into two phases

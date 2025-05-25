@@ -4,3 +4,4 @@ wandb
 torch
 Pillow
 huggingface_hub
+scikit-learn

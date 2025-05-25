@@ -1,6 +1,5 @@
 from unsloth import FastVisionModel
 from unsloth.trainer import UnslothVisionDataCollator
-from unsloth import is_bf16_supported
 from trl import SFTTrainer, SFTConfig
 from transformers import EarlyStoppingCallback
 import torch
@@ -34,7 +33,15 @@ def dataset_split(json_path, test_size=0.2, random_state=42):
     with open(json_path, "r") as f:
         data = json.load(f)
 
-    train_data, test_val_data = train_test_split(data, test_size=test_size, random_state=random_state)
+    data_list = []
+    for image_path, info in data.items():
+        entry = {
+            "image": image_path,
+            **info
+        }
+        data_list.append(entry)
+
+    train_data, test_val_data = train_test_split(data_list, test_size=test_size, random_state=random_state)
     val_data, test_data = train_test_split(test_val_data, test_size=0.5, random_state=random_state)
 
     return train_data, val_data, test_data
@@ -79,14 +86,18 @@ def get_custom_dataset(data, phase):
     custom_dataset = []
     # here data is list of key value pairs
     for sample in data:
-        full_path = sample
+        full_path = sample["image"]
         if os.path.exists(full_path):
             try:
                 image = Image.open(full_path)
                 custom_dataset.append(
                     convert_to_conversation(
                         phase=phase, 
-                        sample={"image": image, "caption": data[sample]}
+                        sample={"image": image, "caption": {
+                                "predictions": sample["predictions"],
+                                "report": sample["report"]
+                            }
+                        }
                     )
                 )
             except Exception as e:
@@ -122,9 +133,13 @@ def configure_model(MODEL_NAME):
     return model, tokenizer
 
 
-def configuration_for_training(model, tokenizer, train_data, val_data, epochs=1):
+def configuration_for_training(model, tokenizer, train_data, val_data, steps=30):
     FastVisionModel.for_training(model)
 
+    callbacks = [
+    EarlyStoppingCallback(early_stopping_patience=5),
+    ]
+    
     trainer = SFTTrainer(
         model = model,
         tokenizer = tokenizer,
@@ -132,15 +147,14 @@ def configuration_for_training(model, tokenizer, train_data, val_data, epochs=1)
         train_dataset = train_data,
         eval_dataset = val_data,
         args = SFTConfig(
-
             per_device_train_batch_size = 2,
             gradient_accumulation_steps = 4,
             warmup_steps = 5,
-            # max_steps = 30,
-            num_train_epochs = epochs,
+            max_steps = steps,
+            # num_train_epochs = 1, # Set this instead of max_steps for full training runs
             learning_rate = 2e-4,
-            fp16 = not is_bf16_supported(),
-            bf16 = is_bf16_supported(),
+            fp16 = False,
+            bf16 = True,
             logging_steps = 1,
             optim = "adamw_8bit",
             weight_decay = 0.01,
@@ -148,17 +162,17 @@ def configuration_for_training(model, tokenizer, train_data, val_data, epochs=1)
             seed = 3407,
             output_dir = "outputs",
             report_to = "wandb",
-
-            # You MUST put the below items for vision finetuning:
             remove_unused_columns = False,
             dataset_text_field = "",
             dataset_kwargs = {"skip_prepare_dataset": True},
             dataset_num_proc = 4,
             max_seq_length = 2048,
-            load_best_model_at_end=True,
-            metric_for_best_model="eval_loss",
-            callbacks=[EarlyStoppingCallback(early_stopping_patience=3),],
-        ),
+            eval_strategy="steps",
+            eval_steps=2,
+    ),
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    callbacks=callbacks,
     )
     return trainer
 
@@ -168,13 +182,13 @@ def save_finetuned_model(model, tokenizer, model_name):
 
 
 def upload_to_huggingface_hub(model, processor):
-    model.push_to_hub("Warun/Jaseci-Gemma-3-4B-Unsloth")
-    processor.push_to_hub("Warun/Jaseci-Gemma-3-4B-Unsloth")
+    model.push_to_hub("Malitha/Gemma3-car-damage-model-4B")
+    processor.push_to_hub("Malitha/Gemma3-car-damage-model-4B")
 
 
 # Main execution
 if __name__ == "__main__":
-    login(token="hf_XXXXXXXXXXXXXXXX")
+    login(token="hf_XXXXXXXXXXXXXXXXXXXXXXX")  # Replace with your Hugging Face token
 
     print("Loading dataset...")
     train_data, val_data, test_data = dataset_split(JSON_FILE_PATH, test_size=0.2, random_state=42)
@@ -192,14 +206,14 @@ if __name__ == "__main__":
     model, tokenizer = configure_model(MODEL_NAME)
     
     # Training for the phase 1
-    trainer_phase_1 = configuration_for_training(model, tokenizer, train_data_phase_1, val_data_phase_1, 3)
+    trainer_phase_1 = configuration_for_training(model, tokenizer, train_data_phase_1, val_data_phase_1, 40)
     print("Phase 1 Finetuning Starting...")
     trainer_phase_1.train()
     used_memory_phase_1 = round(torch.cuda.max_memory_reserved() / 1024 / 1024 / 1024, 3)
     print(f"Peak reserved memory Phase 1 = {used_memory_phase_1} GB.")
 
     # Training for the phase 2
-    trainer_phase_2 = configuration_for_training(model, tokenizer, train_data_phase_2, val_data_phase_2, 10)
+    trainer_phase_2 = configuration_for_training(model, tokenizer, train_data_phase_2, val_data_phase_2, 200)
     print("Phase 2 Finetuning Starting...")
     trainer_phase_2.train()
     used_memory_phase_2 = round(torch.cuda.max_memory_reserved() / 1024 / 1024 / 1024, 3)
